@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Chris Clay | Classified</title>
+    
+    <!-- 1. Load Styles and Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -13,13 +15,13 @@
               mono: ['"Courier Prime"', '"Courier New"', 'Courier', 'monospace'],
             },
             colors: {
-              paper: '#1a1a1a', // Dark charcoal paper
-              ink: '#e5e5e5',   // Off-white ink
-              redact: '#e5e5e5', // Light redaction (whiteout style)
-              alert: '#ef4444', // Bright red for stamps
+              paper: '#1a1a1a', 
+              ink: '#e5e5e5',   
+              redact: '#e5e5e5',
+              alert: '#ef4444', 
             },
             backgroundImage: {
-              'paper-texture': "url('https://www.transparenttextures.com/patterns/dark-matter.png')", // Darker texture
+              'paper-texture': "url('https://www.transparenttextures.com/patterns/dark-matter.png')",
             }
           },
         },
@@ -28,6 +30,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
     <style>
       body {
         background-color: #000000;
@@ -39,31 +42,513 @@
         -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
         mask-size: 900px;
         -webkit-mask-size: 900px;
-        mix-blend-mode: screen; /* Changed to screen for dark mode visibility */
+        mix-blend-mode: screen; 
       }
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 12px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #1a1a1a; 
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #e5e5e5; 
-        border: 2px solid #1a1a1a;
-      }
+      ::-webkit-scrollbar { width: 12px; }
+      ::-webkit-scrollbar-track { background: #1a1a1a; }
+      ::-webkit-scrollbar-thumb { background: #e5e5e5; border: 2px solid #1a1a1a; }
     </style>
+
+    <!-- 2. Load React and Babel (This allows JSX to run in the browser) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
 }
 </script>
 </head>
   <body>
     <div id="root"></div>
+
+    <!-- 3. The Application Logic -->
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+
+      // --- DATA CONSTANTS ---
+      const CONTACT = {
+        phone: "+44 7760 427849",
+        email: "chrischarlesclay at gmail dot com",
+        linkedin: "https://www.linkedin.com/in/christopher-clay-aa825b280/",
+      };
+
+      const EDUCATION = [
+        {
+          institution: "University of Bristol",
+          location: "Bristol, UK",
+          degree: "BSc Mathematics",
+          period: "September 2025 - June 2028",
+          details: []
+        }
+      ];
+
+      const EXPERIENCE = [
+        {
+          id: "dataset-project",
+          role: "Dataset on AI Safety Fellowship Alumni",
+          organization: "Personal Project",
+          location: "Remote",
+          period: "October - December 2025",
+          bullets: [
+            "Compiled and published a [dataset](https://forum.effectivealtruism.org/posts/SJBBgupFx7SXyBj2B/where-do-ai-safety-fellows-go-analyzing-a-dataset-of-600) of 600+ alumni of AI Safety Fellowships.",
+            "Analysed the data to show that over 10% of alumni have done multiple fellowships, revealing fellowship cycles really are a thing.",
+            "Got feedback from Coefficient Giving and Talos Network saying they found the work useful."
+          ]
+        },
+        {
+          id: "impact-research",
+          role: "AI Governance Researcher",
+          organization: "Impact Research Groups",
+          location: "London, UK",
+          period: "July - September 2025",
+          bullets: [
+            "Set the direction for a research team for a paper focusing on alumni outcomes of AI Safety training programs.",
+            "Single-handedly produced the Linkedin scraping side of the output paper."
+          ]
+        },
+        {
+          id: "leaf-fellow",
+          role: "Leaf Fellow",
+          organization: "Leaf",
+          location: "Remote",
+          period: "August – September 2025",
+          bullets: [
+            "Selected for further individual mentorship and funding from top 0.5% of applicants for the Mathematics of Morality course.",
+            "[Produced an EA Forum Post](https://forum.effectivealtruism.org/posts/m5dDrMfHjLtMu293G/ai-safety-s-talent-pipeline-is-over-optimised-for) advocating for greater support for non-research roles within AI Safety."
+          ]
+        },
+        {
+          id: "bluedot",
+          role: "AI Safety Fundamentals Participant",
+          organization: "Bluedot Impact",
+          location: "Remote",
+          period: "October 2024 - February 2025",
+          bullets: [
+            "Selected as one of five sub-university level participants in a competitive international cohort.",
+            "Recognised by facilitators as the strongest contributor within my group.",
+            "Produced an [accessible explainer on superposition](https://chrisclay.substack.com/p/what-is-superposition-in-neural-networks?triedRedirect=true) for my final project."
+          ]
+        },
+        {
+          id: "sales-assistant",
+          role: "Sales Assistant",
+          organization: "Rushfields Plant Centre",
+          location: "Brighton, UK",
+          period: "September 2024 – February 2025",
+          bullets: [
+            "Provided customer support and sales in a high-footfall environment over the Christmas period.",
+            "Designed product displays and optimised shop layouts.",
+            "Assisted with inventory and seasonal marketing."
+          ]
+        },
+        {
+          id: "non-trivial",
+          role: "Non-Trivial Fellow",
+          organization: "Non-Trivial Ventures",
+          location: "Remote",
+          period: "July 2024 - August 2024",
+          bullets: [
+            "Selected for a highly competitive fellowship (1.48% acceptance rate) focused on tackling the world's most pressing problems.",
+            "Participated in workshops and mentoring sessions with leading thinkers, including Peter Singer and Yoshua Bengio.",
+            "Produced a research project on how emerging technologies will affect nuclear deterrence and stability."
+          ]
+        },
+        {
+          id: "ricardo",
+          role: "Engineering Intern", 
+          organization: "Ricardo Group",
+          location: "Remote", 
+          period: "October 2022 - October 2023",
+          bullets: [
+            "Collaborated on the design and build of a demonstration Three-Phase Brushless DC Motor.",
+            "Programmed the system with Arduino, achieving controlled spin at 1,300 RPM.",
+            "Applied principles of engineering design, mathematical modelling, and teamwork in a real-world context."
+          ]
+        }
+      ];
+
+      const PROJECTS = [
+        {
+          id: "global-challenges",
+          role: "Global Challenges Project Attendee",
+          organization: "Global Challenges Project",
+          location: "Oxford, UK",
+          period: "March 2025",
+          bullets: [
+            "Selected to attend a prestigious weekend retreat on existential and technological risks.",
+            "Participated in workshops led by experts in AI Safety and Biosecurity.",
+            "Collaborated with peers on scenario planning and global risk mitigation strategies."
+          ]
+        },
+        {
+          id: "substack",
+          role: "Substack Writer",
+          organization: "Personal Project",
+          location: "Remote",
+          period: "February 2025 - Present",
+          bullets: [
+            "Regularly publish essays on AI Safety, effective altruism, personal development, and philosophy.",
+            "Use the platform to share my thoughts on complex ideas and reflect on emerging global challenges."
+          ]
+        },
+        {
+          id: "crest-award",
+          role: "Gold CREST Award Engineering Project",
+          organization: "",
+          location: "Brighton, UK",
+          period: "",
+          bullets: [] 
+        }
+      ];
+
+      const LEADERSHIP = [
+        {
+          id: "ea-global",
+          role: "EA Global Volunteer",
+          organization: "Centre for Effective Altruism",
+          location: "London, UK",
+          period: "June 2025",
+          bullets: [
+            "Room managed discussions on the EA movement in ethnic minority groups and LICs.",
+            "Ran the talk on Socioeconomic Diversity in EA when the facilitator didn’t show up.",
+            "Facilitated the nuclear weapons meetup."
+          ]
+        },
+        {
+          id: "changing-chalk",
+          role: "‘Changing Chalk’ Volunteer",
+          organization: "National Trust",
+          location: "Brighton, UK",
+          period: "September 2024 - June 2025",
+          bullets: [
+            "Helped out in scrub bashing on the South Downs to preserve the chalk habitat.",
+            "Volunteered on open days to inform visitors of the unique heritage of the downs and the rare species inhabiting them."
+          ]
+        },
+        {
+          id: "piano",
+          role: "Piano Grade 8",
+          organization: "ABRSM",
+          location: "Brighton, UK",
+          period: "September 2022 – June 2023",
+          bullets: []
+        }
+      ];
+
+      const SKILLS = [
+        "Python", "Writing", "Problem Solving", "Research"
+      ];
+
+      const INTERESTS = [
+        "Effective Altruism", "Jazz Piano", "Music Production", "Photography", "Cooking", "Hiking", "Calisthenics"
+      ];
+
+      // --- COMPONENTS ---
+
+      const RedactedText = ({ text, alwaysVisible = false }) => {
+        const [isHovered, setIsHovered] = useState(false);
+
+        if (alwaysVisible) {
+          return <span>{text}</span>;
+        }
+
+        return (
+          <span 
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            className={`
+              relative inline-block px-1 cursor-help transition-all duration-300
+              ${isHovered ? 'bg-transparent text-ink' : 'bg-ink text-transparent select-none'}
+            `}
+            title="Hover to declassify"
+          >
+            {text}
+            {!isHovered && (
+              <span className="absolute inset-0 bg-ink opacity-90 pointer-events-none"></span>
+            )}
+          </span>
+        );
+      };
+
+      const Stamp = ({ text, variant = 'red', className = '', rotation = '-rotate-12' }) => {
+        const colorClass = variant === 'red' ? 'text-alert border-alert' : 'text-ink border-ink';
+        
+        return (
+          <div className={`
+            absolute z-10 opacity-80 pointer-events-none select-none mix-blend-multiply
+            border-4 border-double rounded-lg px-4 py-1 text-center font-bold uppercase tracking-widest
+            ${colorClass} ${rotation} ${className} stamp-box
+          `}>
+            {text}
+          </div>
+        );
+      };
+
+      // Helper to parse markdown links
+      const parseWithLinks = (text) => {
+        const parts = text.split(/(\[.*?\]\(.*?\))/g);
+        
+        return parts.map((part, index) => {
+          const match = part.match(/^\[(.*?)\]\((.*?)\)$/);
+          if (match) {
+            return (
+              <a 
+                key={index} 
+                href={match[2]} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="underline decoration-dotted hover:bg-ink hover:text-paper transition-colors"
+              >
+                {match[1]}
+              </a>
+            );
+          }
+          return part;
+        });
+      };
+
+      const Entry = ({ title, subtitle, location, period, details, link }) => {
+        return (
+          <div className="mb-6 break-inside-avoid">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-baseline mb-1">
+              <h3 className="font-bold text-lg leading-tight uppercase tracking-tight">
+                {link ? (
+                  <a href={link} target="_blank" rel="noopener noreferrer" className="underline decoration-dotted hover:bg-ink hover:text-paper transition-colors">
+                    {title}
+                  </a>
+                ) : (
+                  title
+                )}
+              </h3>
+              <span className="text-sm font-bold md:ml-4 whitespace-nowrap">{location}</span>
+            </div>
+            
+            <div className="flex flex-col md:flex-row md:justify-between md:items-baseline mb-2 border-b border-neutral-600 pb-1">
+              <span className="italic font-semibold">{subtitle}</span>
+              <span className="text-sm italic opacity-80">{period}</span>
+            </div>
+
+            <ul className="list-none pl-2 md:pl-4 space-y-1">
+              {details.map((detail, index) => (
+                <li key={index} className="text-sm md:text-base leading-relaxed relative pl-4 before:content-['•'] before:absolute before:left-0 before:text-neutral-500">
+                  {parseWithLinks(detail)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      };
+
+      // --- MAIN APP ---
+
+      const App = () => {
+        const [showContact, setShowContact] = useState(false);
+
+        return (
+          <div className="min-h-screen bg-black py-4 px-2 md:py-12 md:px-0 flex justify-center font-mono">
+            <div className="w-full max-w-4xl bg-paper text-ink shadow-2xl min-h-[1100px] relative overflow-hidden print:shadow-none print:w-full border border-neutral-800">
+              
+              {/* Decorative Binding Holes (Left side) */}
+              <div className="absolute left-2 top-0 bottom-0 flex flex-col justify-between py-12 md:hidden">
+                 {[...Array(20)].map((_, i) => (
+                   <div key={i} className="w-2 h-2 rounded-full bg-neutral-800 mb-8"></div>
+                 ))}
+              </div>
+
+              {/* Paper Header / Meta info */}
+              <div className="p-8 md:p-12 border-b-2 border-ink relative">
+                
+                {/* Profile Photo - Stapled Look */}
+                <div className="hidden md:block absolute top-12 right-12 z-20">
+                  <div className="relative">
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-2 bg-neutral-400 opacity-80 rotate-2 shadow-sm z-30"></div> 
+                    <img 
+                      src="profile.jpg" 
+                      alt="Chris Clay" 
+                      className="w-32 h-40 object-cover grayscale contrast-125 border-4 border-white shadow-xl rotate-2"
+                    />
+                  </div>
+                </div>
+
+                <Stamp text="CONFIDENTIAL" className="top-10 right-32 text-xl md:text-4xl opacity-90 z-30" rotation="-rotate-6" />
+                
+                <div className="flex justify-between text-xs md:text-sm text-neutral-500 mb-8 uppercase tracking-widest relative z-10">
+                  <div>
+                    <p>Doc ID: CC-2025-V2</p>
+                    <p>Class: Unclassified//Dark</p>
+                  </div>
+                  <div className="text-right md:mr-48">
+                     <p>Date: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}</p>
+                  </div>
+                </div>
+
+                <div className="text-center mb-8 relative z-10 md:mr-32">
+                  <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-2 text-ink uppercase">Chris Clay</h1>
+                  <div className="w-32 h-1 bg-ink mx-auto mb-4"></div>
+                  <h2 className="text-lg md:text-xl font-bold uppercase tracking-widest text-neutral-400">
+                    Maths Student & AI Governance Researcher
+                  </h2>
+                </div>
+
+                <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 text-sm md:text-base border-t border-dotted border-neutral-600 pt-4 mt-4">
+                   {/* Email displayed as text only for security */}
+                   <span className="hover:bg-ink hover:text-paper px-1 transition-colors cursor-text">
+                     E: {CONTACT.email}
+                   </span>
+                   <span className="hidden md:inline text-neutral-600">|</span>
+                   <a href="tel:+447760427849" className="hover:bg-ink hover:text-paper px-1 transition-colors">
+                     T: {CONTACT.phone}
+                   </a>
+                   <span className="hidden md:inline text-neutral-600">|</span>
+                   <a href={CONTACT.linkedin} target="_blank" rel="noreferrer" className="hover:bg-ink hover:text-paper px-1 transition-colors underline decoration-dotted">
+                     LINKEDIN PROFILE
+                   </a>
+                </div>
+              </div>
+
+              {/* Main Content Body */}
+              <div className="p-6 md:p-12 space-y-10 relative">
+                
+                {/* Watermark */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.03] overflow-hidden">
+                  <h1 className="text-[200px] font-bold -rotate-45 whitespace-nowrap text-ink">TOP SECRET</h1>
+                </div>
+
+                {/* Education Section */}
+                <section className="relative z-10">
+                  <div className="flex items-center gap-4 mb-6">
+                    <h2 className="text-2xl font-bold bg-ink text-paper px-2 py-1 uppercase tracking-widest">Education</h2>
+                    <div className="h-0.5 bg-ink flex-grow"></div>
+                  </div>
+                  {EDUCATION.map((edu, idx) => (
+                    <Entry 
+                      key={idx}
+                      title={edu.institution}
+                      subtitle={edu.degree}
+                      location={edu.location}
+                      period={edu.period}
+                      details={edu.details}
+                    />
+                  ))}
+                </section>
+
+                {/* Experience Section */}
+                <section className="relative z-10">
+                  <div className="flex items-center gap-4 mb-6">
+                    <h2 className="text-2xl font-bold bg-ink text-paper px-2 py-1 uppercase tracking-widest">Professional Experience</h2>
+                    <div className="h-0.5 bg-ink flex-grow"></div>
+                  </div>
+                  {EXPERIENCE.map((exp) => (
+                    <Entry 
+                      key={exp.id}
+                      title={exp.role}
+                      subtitle={exp.organization}
+                      location={exp.location}
+                      period={exp.period}
+                      details={exp.bullets}
+                      link={exp.link}
+                    />
+                  ))}
+                </section>
+
+                {/* Projects Section */}
+                <section className="relative z-10">
+                  <div className="flex items-center gap-4 mb-6">
+                    <h2 className="text-2xl font-bold bg-ink text-paper px-2 py-1 uppercase tracking-widest">Projects & Outside Experience</h2>
+                    <div className="h-0.5 bg-ink flex-grow"></div>
+                  </div>
+                  {PROJECTS.map((proj) => (
+                    <Entry 
+                      key={proj.id}
+                      title={proj.role}
+                      subtitle={proj.organization}
+                      location={proj.location}
+                      period={proj.period}
+                      details={proj.bullets}
+                      link={proj.link}
+                    />
+                  ))}
+                </section>
+
+                {/* Activities & Leadership */}
+                <section className="relative z-10">
+                  <div className="flex items-center gap-4 mb-6">
+                    <h2 className="text-2xl font-bold bg-ink text-paper px-2 py-1 uppercase tracking-widest">Activities & Leadership</h2>
+                    <div className="h-0.5 bg-ink flex-grow"></div>
+                  </div>
+                  {LEADERSHIP.map((lead) => (
+                    <Entry 
+                      key={lead.id}
+                      title={lead.role}
+                      subtitle={lead.organization}
+                      location={lead.location}
+                      period={lead.period}
+                      details={lead.bullets}
+                    />
+                  ))}
+                </section>
+
+                {/* Skills & Interests - Grid Layout */}
+                <section className="relative z-10 border-2 border-ink p-6 bg-white/5">
+                   <Stamp text="VERIFIED" variant="black" className="absolute -top-4 -right-2 rotate-6 text-sm opacity-50" />
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                     <div>
+                        <h3 className="font-bold underline mb-3 uppercase">Skills</h3>
+                        <div className="flex flex-wrap gap-2">
+                          {SKILLS.map((skill, i) => (
+                            <span key={i} className="bg-neutral-700 text-neutral-200 px-2 py-0.5 text-sm font-semibold">
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                     </div>
+                     <div>
+                        <h3 className="font-bold underline mb-3 uppercase">Interests</h3>
+                        <div className="flex flex-wrap gap-x-4 gap-y-1">
+                          {INTERESTS.map((interest, i) => (
+                            <span key={i} className="text-sm">
+                              {i % 2 === 0 ? <RedactedText text={interest} /> : interest}
+                            </span>
+                          ))}
+                        </div>
+                     </div>
+                   </div>
+                </section>
+                
+                {/* Action Footer */}
+                <div className="mt-12 text-center relative z-20">
+                   <button 
+                      onClick={() => setShowContact(!showContact)}
+                      className="group relative inline-flex items-center justify-center px-8 py-3 font-bold text-ink transition-all duration-200 bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ink border border-ink"
+                   >
+                      <span className="absolute inset-0 w-full h-full -mt-1 -ml-1 transition-all duration-200 ease-out bg-alert rounded group-hover:mt-0 group-hover:ml-0"></span>
+                      <span className="relative text-white">INITIATE CONTACT PROTOCOL</span>
+                   </button>
+
+                   {showContact && (
+                     <div className="mt-6 p-4 border border-alert bg-red-900/20 text-alert animate-pulse">
+                        <p className="font-bold">SECURE CHANNEL OPEN</p>
+                        <p className="mt-2 text-ink">Transmission Target: <span className="font-bold text-red-400">{CONTACT.email}</span></p>
+                     </div>
+                   )}
+                </div>
+
+              </div>
+
+              {/* Footer/Scan lines */}
+              <div className="h-4 bg-ink/10 w-full mt-12 bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhhYWGMYAEYB8RmROaABADeOQ8CXl/xfgAAAABJRU5ErkJggg==')] opacity-30"></div>
+            </div>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
   </body>
 </html>
